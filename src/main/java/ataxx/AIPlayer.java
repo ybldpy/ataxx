@@ -32,34 +32,86 @@ class AIPlayer extends Player {
 
 
     private Move findMoveHelper(Board simulationBoard,int depth){
-        int max = -1;
+        int max = simulationBoard.getColorNums(getMyState());
         Move maxMove = null;
+        List<Move> moves = new ArrayList<>();
         List<Move> moveList = possibleMoves(simulationBoard,getMyState());
+        Map<Move,Integer> minMove = new HashMap<>();
         for(Move move:moveList){
-            int tMax = evaluateMove(new Board(simulationBoard),depth,move,0);
+            minMove.put(move,simulationBoard.getColorNums(getMyState()==PieceState.RED?PieceState.BLUE:PieceState.RED));
+            int tMax = evaluateMyMove(new Board(simulationBoard),depth,move,0,move,minMove);
             if (tMax>max){
                 max = tMax;
-                maxMove = move;
+                moves.clear();
+                moves.add(move);
+            }
+            else if (tMax==max){
+                moves.add(move);
             }
         }
-        return maxMove;
+
+        int min = Integer.MIN_VALUE;
+        List<Move> finalMovesList = new ArrayList<>();
+        for(Move move:moves){
+            if (minMove.get(move)>min){
+                min = minMove.get(move);
+                finalMovesList.clear();
+                finalMovesList.add(move);
+            }
+            else if (minMove.get(move)==min){
+                finalMovesList.add(move);
+            }
+        }
+
+        return finalMovesList.get(new Random().nextInt(finalMovesList.size()));
+//        int min = simulationBoard.getColorNums(getMyState()==PieceState.RED?PieceState.BLUE:PieceState.RED);
+//        Move finalMove = moves.get(new Random().nextInt(moves.size()));
+//        for(Move move:moves){
+//            int tMin = evaluateEnemyMove(new Board(simulationBoard),depth,move,0);
+//            if (tMin<min){
+//                min = tMin;
+//                finalMove = move;
+//            }
+//        }
+
+
+
+
 
     }
 
+//    private int evaluateEnemyMove(Board board,int depth,Move move,int turn){
+//        if (depth<=0){return board.getColorNums(getMyState()==PieceState.RED?PieceState.BLUE:PieceState.RED);}
+//        int min = board.getColorNums(getMyState()==PieceState.RED?PieceState.BLUE:PieceState.RED);
+//        board.createMove(move);
+//        List<Move> moves = possibleMoves(board,board.nextMove());
+//        for(Move move1:moves){
+//            Board t = new Board(board);
+//            if (turn%2==0){
+//                min = Math.min(min,evaluateMyMove(t,depth,move1,turn+1));
+//            }
+//            else {
+//                min = Math.min(min,evaluateMyMove(t,depth-1,move1,turn+1));
+//            }
+//        }
+//        return min;
+//    }
 
 
-    private int evaluateMove(Board board,int depth,Move move,int turn){
-        if (depth<=0){return board.getColorNums(board.nextMove());}
+
+    private int evaluateMyMove(Board board,int depth,Move move,int turn,Move initMove,Map<Move,Integer> minMove){
+        if (depth<=0){return board.getColorNums(getMyState());}
         int max = board.getColorNums(getMyState());
         board.createMove(move);
+        minMove.put(initMove,Math.min(minMove.get(initMove),Math.min(minMove.get(initMove),board.getColorNums(getMyState())-board.getColorNums(getMyState()==PieceState.RED?PieceState.BLUE:PieceState.RED))));
         List<Move> moves = possibleMoves(board,board.nextMove());
         for(Move move1:moves){
             Board t = new Board(board);
             if (turn%2==0){
-                max = Math.max(max,evaluateMove(t,depth-1,move1,turn+1));
+                max = Math.max(max,evaluateMyMove(t,depth-1,move1,turn+1,initMove,minMove));
             }
             else {
-                max = Math.min(max,evaluateMove(t,depth-1,move1,turn+1));
+                max = Math.min(max,evaluateMyMove(t,depth,move1,turn+1,initMove,minMove));
             }
         }
         return max;
@@ -87,7 +139,7 @@ class AIPlayer extends Player {
 //            }
 //        }
 
-        Move maxMove = findMoveHelper(getAtaxxBoard(),3);
+        Move maxMove = findMoveHelper(getAtaxxBoard(),2);
         lastFoundMove = maxMove;
         getAtaxxBoard().createMove(maxMove);
 
