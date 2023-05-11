@@ -21,13 +21,13 @@ public class MoveTest {
 
     @Test
     public void testIsJumpTrue(){
-        assertEquals(Boolean.valueOf("true"), Move.isJump("c1","d3"));
+        assertEquals(Boolean.valueOf("true"), Move.isJump("c1","c3"));
         assertEquals(Boolean.valueOf("true"), Move.isJump("c1","c3"));
     }
 
     @Test
     public void testIsJumpFalse(){
-        assertEquals(Boolean.valueOf("false"), Move.isJump("c4","d3"));
+        assertEquals(Boolean.valueOf("false"), Move.isJump("c4","c3"));
         assertEquals(Boolean.valueOf("false"), Move.isJump("b2","b5"));
     }
 

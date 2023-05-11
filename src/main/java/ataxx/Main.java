@@ -20,7 +20,7 @@ public class Main {
             new CommandArgs("--display{0,1}", args0);
 
         Game game;
-        if (args.contains("--display")) {
+        if (args.contains("--display")||true) {
             GUI display = new GUI("Ataxx");
             game = new Game(display, display, display);
             display.pack();

@@ -72,6 +72,13 @@ class Move {
 	  */
     static boolean isClone(String location0, String location1) {
         // complete the code
+        if (location0==null||location1==null||location0.length()!=2||location1.length()!=2){return false;}
+        if (!location0.matches("[a-g][1-9]")){
+            return false;
+        }
+        if (!location1.matches("[a-g][1-9]")){
+            return false;
+        }
         char c0 = location0.charAt(0);
         char r0 = location0.charAt(1);
         char c1 = location1.charAt(0);
@@ -85,6 +92,14 @@ class Move {
       * @return true if it is a jump move. 
 	  */
     static boolean isJump(String location0, String location1) {
+        if (location0==null||location1==null||location0.length()!=2||location1.length()!=2){return false;}
+
+        if (!location0.matches("[a-g][1-9]")){
+            return false;
+        }
+        if (!location1.matches("[a-g][1-9]")){
+            return false;
+        }
         // complete the code
         char c0 = location0.charAt(0);
         char r0 = location0.charAt(1);

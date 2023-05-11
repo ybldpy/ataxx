@@ -220,4 +220,6 @@ class Game {
     /** Current Ataxx players, indexed by color (RED, BLUE). */
     private final Player[] ataxxPlayers = new Player[PieceState.values().length];
 
+
+
 }
